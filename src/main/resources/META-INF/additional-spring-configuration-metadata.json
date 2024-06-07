@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "video-site.server.api.key",
+    "type": "java.lang.String",
+    "description": "A description for 'video-site.server.api.key'"
+  },
+  {
+    "name": "video-site.dll.version",
+    "type": "java.lang.String",
+    "description": "A description for 'video-site.dll.version'"
+  },
+  {
+    "name": "video-site.server.jwt.secret.access.key",
+    "type": "java.lang.String",
+    "description": "A description for 'video-site.server.jwt.secret.access.key'"
+  },
+  {
+    "name": "video-site.server.jwt.secret.refresh.key",
+    "type": "java.lang.String",
+    "description": "A description for 'video-site.server.jwt.secret.refresh.key'"
+  }
+]}
