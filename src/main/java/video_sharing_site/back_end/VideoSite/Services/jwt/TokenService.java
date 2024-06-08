@@ -14,7 +14,8 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 
 /**
- * This class provides token-related services such as token creation, verification, and extracting user information from tokens.
+ * This class provides token-related services such as token creation,
+ * verification, and extracting user information from tokens.
  */
 @Service
 public class TokenService {
@@ -26,7 +27,8 @@ public class TokenService {
     private SecretKey refreshSecretToken;
 
     /**
-     * Initializes the access and refresh secret tokens using the secret keys obtained from the SecretKeysServices bean.
+     * Initializes the access and refresh secret tokens using the secret keys
+     * obtained from the SecretKeysServices bean.
      */
     @PostConstruct
     public void init() {
@@ -37,33 +39,28 @@ public class TokenService {
     /**
      * Creates a token with the specified email, expiration time, and secret key.
      *
-     * @param email      The email associated with the token.
-     * @param seconds    The expiration time of the token in seconds.
-     * @param secretKey  The secret key used for token encryption.
-     * @return           The created token.
+     * @param email     The email associated with the token.
+     * @param seconds   The expiration time of the token in seconds.
+     * @param secretKey The secret key used for token encryption.
+     * @return The created token.
      */
     private String createToken(String email, int seconds, SecretKey secretKey) {
-        return Jwts.builder()
-                .subject(email)
-                .expiration(Date.from(new Date().toInstant().plusSeconds(seconds)))
-                .signWith(secretKey)
-                .compact();
+        return Jwts.builder().subject(email).expiration(Date.from(new Date().toInstant().plusSeconds(seconds)))
+                .signWith(secretKey).compact();
     }
 
     /**
-     * Verifies the authenticity and integrity of a token using the specified secret token and token string.
+     * Verifies the authenticity and integrity of a token using the specified secret
+     * token and token string.
      *
-     * @param secretToken  The secret token used for token verification.
-     * @param token        The token string to be verified.
-     * @return             The verified token if valid, null otherwise.
+     * @param secretToken The secret token used for token verification.
+     * @param token       The token string to be verified.
+     * @return The verified token if valid, null otherwise.
      */
     private Jwt<?, ?> verifyToken(SecretKey secretToken, String token) {
         Jwt<?, ?> jwt;
         try {
-            jwt = Jwts.parser()
-                    .verifyWith(secretToken)
-                    .build()
-                    .parse(token);
+            jwt = Jwts.parser().verifyWith(secretToken).build().parse(token);
             return jwt;
         } catch (JwtException e) {
             return null;
@@ -71,11 +68,13 @@ public class TokenService {
     }
 
     /**
-     * Extracts the user information from a token using the specified secret key and token string.
+     * Extracts the user information from a token using the specified secret key and
+     * token string.
      *
-     * @param secretKey  The secret key used for token verification.
-     * @param token      The token string from which to extract the user information.
-     * @return           The user information extracted from the token if valid, null otherwise.
+     * @param secretKey The secret key used for token verification.
+     * @param token     The token string from which to extract the user information.
+     * @return The user information extracted from the token if valid, null
+     *         otherwise.
      */
     private String getUserFromToken(SecretKey secretKey, String token) {
         try {
@@ -88,8 +87,8 @@ public class TokenService {
     /**
      * Creates an access token for the specified email.
      *
-     * @param email  The email associated with the access token.
-     * @return       The created access token.
+     * @param email The email associated with the access token.
+     * @return The created access token.
      */
     public String createAccessToken(String email) {
         String accessToken = createToken(email, (60 * 30), accessSecretToken);
@@ -99,8 +98,8 @@ public class TokenService {
     /**
      * Creates a refresh token for the specified email.
      *
-     * @param email  The email associated with the refresh token.
-     * @return       The created refresh token.
+     * @param email The email associated with the refresh token.
+     * @return The created refresh token.
      */
     public String createRefreshToken(String email) {
         String refreshToken = createToken(email, (60 * 60 * 24 * 7), refreshSecretToken);
@@ -110,8 +109,8 @@ public class TokenService {
     /**
      * Verifies the authenticity and integrity of an access token.
      *
-     * @param token  The access token to be verified.
-     * @return       The verified access token if valid, null otherwise.
+     * @param token The access token to be verified.
+     * @return The verified access token if valid, null otherwise.
      */
     public Jwt<?, ?> verifyAccessToken(String token) {
         return verifyToken(accessSecretToken, token);
@@ -120,8 +119,8 @@ public class TokenService {
     /**
      * Verifies the authenticity and integrity of a refresh token.
      *
-     * @param token  The refresh token to be verified.
-     * @return       The verified refresh token if valid, null otherwise.
+     * @param token The refresh token to be verified.
+     * @return The verified refresh token if valid, null otherwise.
      */
     public Jwt<?, ?> verifyRefreshToken(String token) {
         return verifyToken(refreshSecretToken, token);
@@ -130,8 +129,9 @@ public class TokenService {
     /**
      * Extracts the user information from a refresh token.
      *
-     * @param token  The refresh token from which to extract the user information.
-     * @return       The user information extracted from the refresh token if valid, null otherwise.
+     * @param token The refresh token from which to extract the user information.
+     * @return The user information extracted from the refresh token if valid, null
+     *         otherwise.
      */
     public String getUserFromRefreshToken(String token) {
         return getUserFromToken(refreshSecretToken, token);
@@ -140,8 +140,9 @@ public class TokenService {
     /**
      * Extracts the user information from an access token.
      *
-     * @param token  The access token from which to extract the user information.
-     * @return       The user information extracted from the access token if valid, null otherwise.
+     * @param token The access token from which to extract the user information.
+     * @return The user information extracted from the access token if valid, null
+     *         otherwise.
      */
     public String getUserFromAccessToken(String token) {
         return getUserFromToken(accessSecretToken, token);

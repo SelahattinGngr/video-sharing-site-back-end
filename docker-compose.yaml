@@ -5,28 +5,35 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: SelahattinPass1.     # Root şifresi
-      MYSQL_DATABASE: video-site                # Veritabani adi
-      MYSQL_USER: selahattin                    # Kullanici adi
-      MYSQL_PASSWORD: Selahattin123.            # Kullanici sifresi
-      MYSQL_USER_2: moderator1                  # Ikinci kullanici adi
-      MYSQL_PASSWORD_2: moderator1Pass          # Ikinci kullanici sifre
+      MYSQL_ROOT_PASSWORD: SelahattinPass1.
+      MYSQL_DATABASE: video-site
+      MYSQL_USER: selahattin
+      MYSQL_PASSWORD: Selahattin123.
+      MYSQL_USER_2: moderator1
+      MYSQL_PASSWORD_2: moderator1Pass
     ports:
-      - "3307:3306"                             # Veritabanı portunu 3307
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    restart: always
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: SelahattinPass1.     # MySQL root sifresi
+      MYSQL_ROOT_PASSWORD: SelahattinPass1.
     ports:
       - "8082:80"
     depends_on:
       - mysql
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
 
 volumes:
   mysql_data:

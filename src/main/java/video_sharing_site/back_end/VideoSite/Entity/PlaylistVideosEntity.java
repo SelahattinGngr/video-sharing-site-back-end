@@ -15,7 +15,7 @@ import lombok.Data;
 @Builder
 @Entity
 @Table(name = "playlist_videos")
-public class PlaylistVideos {
+public class PlaylistVideosEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

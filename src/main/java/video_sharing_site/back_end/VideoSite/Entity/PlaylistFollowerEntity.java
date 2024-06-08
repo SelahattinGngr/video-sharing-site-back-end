@@ -14,7 +14,7 @@ import lombok.Data;
 @Builder
 @Entity
 @Table(name = "playlist_followers")
-public class PlaylistFollower {
+public class PlaylistFollowerEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
