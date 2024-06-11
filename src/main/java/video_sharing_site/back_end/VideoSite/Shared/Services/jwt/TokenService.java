@@ -1,4 +1,4 @@
-package video_sharing_site.back_end.VideoSite.Services.jwt;
+package video_sharing_site.back_end.VideoSite.Shared.Services.jwt;
 
 import java.util.Date;
 

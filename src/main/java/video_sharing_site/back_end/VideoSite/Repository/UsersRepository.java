@@ -14,7 +14,7 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Long> {
     Optional<UsersEntity> findById(Long Id);
     
     // kullanıcı adına göre kullanıcı bulma
-    UsersEntity findByUsername(String username);
+    UsersEntity findByUsername(String userName);
 
     // kullanıcı email'ine göre kullanıcı bulma
     UsersEntity findByEmail(String email);

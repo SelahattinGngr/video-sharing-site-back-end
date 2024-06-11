@@ -2,12 +2,15 @@ package video_sharing_site.back_end.VideoSite.Controller;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import video_sharing_site.back_end.VideoSite.Entity.UsersEntity;
 import video_sharing_site.back_end.VideoSite.Exception.BaseTokenExceptions;
@@ -19,8 +22,12 @@ import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserInvali
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserNotFoundException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserUsernameException;
 
+@RestController
 @RequestMapping("/${video-site.server.api.key}/auth")
 public class AuthController {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@RequestBody UsersEntity user) {
@@ -30,6 +37,8 @@ public class AuthController {
         String username = user.getUsername();
         String password = user.getPassword();
         try {
+            //System.out.println(user.getEmail());
+            System.out.println("User created successfully.");
             return new ResponseEntity<>(Map.of("Success", "User created successfully."), HttpStatus.CREATED);
         } catch (UserEmailException e) {
             return new BaseUserExceptions().emailException();
@@ -66,7 +75,7 @@ public class AuthController {
             return new BaseUserExceptions().exception("logging out.");
         }
     }
-    
+
     // @PostMapping("/forgot-password")
     // public ResponseEntity<Map<String, Object>> forgotPassword() {
     // try {

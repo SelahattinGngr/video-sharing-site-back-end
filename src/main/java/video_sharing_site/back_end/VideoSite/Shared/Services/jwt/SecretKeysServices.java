@@ -1,4 +1,4 @@
-package video_sharing_site.back_end.VideoSite.Services.jwt;
+package video_sharing_site.back_end.VideoSite.Shared.Services.jwt;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

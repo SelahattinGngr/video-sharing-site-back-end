@@ -14,7 +14,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import lombok.Builder;
 import lombok.Data;
 
 /*
@@ -24,7 +23,6 @@ import lombok.Data;
 
 // Lombok'un getter, setter, toString, equalsAndHashCode ve constructor'ları otomatik olusturmasini saglar
 @Data
-@Builder
 @Entity
 @Table(name = "users")
 public class UsersEntity {

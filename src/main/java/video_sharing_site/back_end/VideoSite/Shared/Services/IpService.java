@@ -1,4 +1,4 @@
-package video_sharing_site.back_end.VideoSite.Services;
+package video_sharing_site.back_end.VideoSite.Shared.Services;
 
 
 import org.springframework.stereotype.Service;
