@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import video_sharing_site.back_end.VideoSite.Dto.UserDto;
 import video_sharing_site.back_end.VideoSite.Entity.UsersEntity;
 import video_sharing_site.back_end.VideoSite.Exception.BaseTokenExceptions;
 import video_sharing_site.back_end.VideoSite.Exception.BaseUserExceptions;
 import video_sharing_site.back_end.VideoSite.Exception.TokenExceptions.TokenInvalidException;
-import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserEmailException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserInvalidException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserNotFoundException;
-import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserUsernameException;
+import video_sharing_site.back_end.VideoSite.Service.AuthService;
 
 @RestController
 @RequestMapping("/${video-site.server.api.key}/auth")
@@ -29,21 +30,17 @@ public class AuthController {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Autowired
+    private AuthService authService;
+
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, Object>> signup(@RequestBody UsersEntity user) {
-        String firstName = user.getFirstName();
-        String lastName = user.getLastName();
-        String email = user.getEmail();
-        String username = user.getUsername();
-        String password = user.getPassword();
+    public ResponseEntity<Map<String, Object>> signup(HttpServletRequest request) {
         try {
-            //System.out.println(user.getEmail());
-            System.out.println("User created successfully.");
+            UserDto user = (UserDto) request.getAttribute("userDto");
+            if (user == null)
+                throw new UserException();
+            authService.signup(user);
             return new ResponseEntity<>(Map.of("Success", "User created successfully."), HttpStatus.CREATED);
-        } catch (UserEmailException e) {
-            return new BaseUserExceptions().emailException();
-        } catch (UserUsernameException e) {
-            return new BaseUserExceptions().usernameException();
         } catch (UserException e) {
             return new BaseUserExceptions().exception("signing up.");
         }

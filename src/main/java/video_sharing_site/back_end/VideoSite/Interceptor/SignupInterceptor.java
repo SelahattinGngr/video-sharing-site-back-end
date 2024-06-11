@@ -1,30 +1,32 @@
-package video_sharing_site.back_end.VideoSite.Interceptors;
-
-import java.io.IOException;
-import java.util.Map;
+package video_sharing_site.back_end.VideoSite.Interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import video_sharing_site.back_end.VideoSite.Entity.UsersEntity;
+import video_sharing_site.back_end.VideoSite.Dto.UserDto;
 import video_sharing_site.back_end.VideoSite.Exception.BaseUserExceptions;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserEmailException;
+import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserEmailValidateException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserException;
+import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserPasswordValidateException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserUsernameException;
-import video_sharing_site.back_end.VideoSite.Repository.UsersRepository;
+import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserUsernameValidateException;
+import video_sharing_site.back_end.VideoSite.Shared.Services.SignupValidationService;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Map;
 
 @Component
 public class SignupInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UsersRepository usersRepository;
+    private SignupValidationService validationService;
 
     @Override
     @SuppressWarnings("null")
@@ -36,20 +38,17 @@ public class SignupInterceptor implements HandlerInterceptor {
 
             String email = jsonNode.get("email").asText();
             String username = jsonNode.get("userName").asText();
-            {
-                if (email == null)
-                    throw new UserException();
-                UsersEntity user = usersRepository.findByEmail(email);
-                if (user != null)
-                    throw new UserEmailException();
-            }
-            {
-                if (username == null)
-                    throw new UserException();
-                UsersEntity user = usersRepository.findByUsername(username);
-                if (user != null)
-                    throw new UserUsernameException();
-            }
+            String password = jsonNode.get("password").asText();
+            String firstName = jsonNode.get("firstName").asText();
+            String lastName = jsonNode.get("lastName").asText();
+            LocalDate birthday = LocalDate.parse(jsonNode.get("birthday").asText());
+
+            validationService.validateEmail(email);
+            validationService.validateUsername(username);
+            validationService.validatePassword(password);
+
+            UserDto user = new UserDto(firstName, lastName, email, username, password, birthday);
+            request.setAttribute("userDto", user);
             return true;
         } catch (UserEmailException e) {
             handleException(new BaseUserExceptions().emailException(), response);
@@ -58,7 +57,16 @@ public class SignupInterceptor implements HandlerInterceptor {
             handleException(new BaseUserExceptions().usernameException(), response);
             return false;
         } catch (UserException e) {
-            handleException(new BaseUserExceptions().exception("signing up, username or e-mail is empty."), response);
+            handleException(new BaseUserExceptions().invalidException(), response);
+            return false;
+        } catch (UserEmailValidateException e) {
+            handleException(new BaseUserExceptions().emailValidateException(), response);
+            return false;
+        } catch (UserUsernameValidateException e) {
+            handleException(new BaseUserExceptions().usernameValidateException(), response);
+            return false;
+        } catch (UserPasswordValidateException e) {
+            handleException(new BaseUserExceptions().passwordValidateException(), response);
             return false;
         }
     }

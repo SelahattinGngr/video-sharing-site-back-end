@@ -44,7 +44,7 @@ public class UsersEntity {
     private String email;
 
     @Column(name = "username", nullable = false, unique = true)
-    private String username;
+    private String userName;
 
     @Column(name = "password", nullable = false)
     private String password;

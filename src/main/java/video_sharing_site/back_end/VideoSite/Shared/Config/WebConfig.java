@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import video_sharing_site.back_end.VideoSite.Interceptors.SignupInterceptor;
+import video_sharing_site.back_end.VideoSite.Interceptor.SignupInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer{

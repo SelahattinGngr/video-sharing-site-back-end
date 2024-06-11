@@ -14,7 +14,7 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Long> {
     Optional<UsersEntity> findById(Long Id);
     
     // kullanıcı adına göre kullanıcı bulma
-    UsersEntity findByUsername(String userName);
+    UsersEntity findByUserName(String userName);
 
     // kullanıcı email'ine göre kullanıcı bulma
     UsersEntity findByEmail(String email);
@@ -23,7 +23,7 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Long> {
     UsersEntity findByRefreshToken(String refreshToken);
 
     // kullanıcı adı ve şifresine göre kullanıcı bulma
-    UsersEntity findByUsernameAndPassword(String username, String password);
+    UsersEntity findByUserNameAndPassword(String username, String password);
 
     // kullanıcı email ve şifresine göre kullanıcı bulma
     UsersEntity findByEmailAndPassword(String email, String password);

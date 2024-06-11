@@ -22,19 +22,34 @@ public class BaseUserExceptions extends RuntimeException {
         return new ResponseEntity<>(Map.of("Error", "Username already exists."), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserException.class)
+    @ExceptionHandler(UserInvalidException.class)
     public ResponseEntity<Map<String, Object>> invalidException() {
         return new ResponseEntity<>(Map.of("Error", "Invalid E-mail/Username or password."), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler(UserException.class)
     public ResponseEntity<Map<String, Object>> exception(String message) {
         return new ResponseEntity<>(Map.of("Error", "An error occurred while " + message),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(UserInvalidException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> notFoundException() {
         return new ResponseEntity<>(Map.of("Error", "User not found."), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UserEmailValidateException.class)
+    public ResponseEntity<Map<String, Object>> emailValidateException() {
+        return new ResponseEntity<>(Map.of("Error", "Invalid E-mail."), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserUsernameValidateException.class)
+    public ResponseEntity<Map<String, Object>> usernameValidateException() {
+        return new ResponseEntity<>(Map.of("Error", "Invalid Username."), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserPasswordValidateException.class)
+    public ResponseEntity<Map<String, Object>> passwordValidateException() {
+        return new ResponseEntity<>(Map.of("Error", "Invalid Password."), HttpStatus.BAD_REQUEST);
     }
 }
