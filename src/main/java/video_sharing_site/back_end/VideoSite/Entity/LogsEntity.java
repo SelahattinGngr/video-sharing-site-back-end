@@ -9,12 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 @Entity
 @Table(name = "logs")
 public class LogsEntity {
@@ -24,7 +23,7 @@ public class LogsEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private UsersEntity userId;
 
     @Column(name = "time", nullable = false)
@@ -32,4 +31,9 @@ public class LogsEntity {
 
     @Column(name = "message", nullable = false)
     private String message;
+
+    @PrePersist
+    public void prePersist() {
+        time = LocalDateTime.now();
+    }
 }

@@ -44,8 +44,8 @@ public class TokenService {
      * @param secretKey The secret key used for token encryption.
      * @return The created token.
      */
-    private String createToken(String email, int seconds, SecretKey secretKey) {
-        return Jwts.builder().subject(email).expiration(Date.from(new Date().toInstant().plusSeconds(seconds)))
+    private String createToken(String email, String username, int seconds, SecretKey secretKey) {
+        return Jwts.builder().subject(email).subject(username).expiration(Date.from(new Date().toInstant().plusSeconds(seconds)))
                 .signWith(secretKey).compact();
     }
 
@@ -90,8 +90,8 @@ public class TokenService {
      * @param email The email associated with the access token.
      * @return The created access token.
      */
-    public String createAccessToken(String email) {
-        String accessToken = createToken(email, (60 * 30), accessSecretToken);
+    public String createAccessToken(String email, String username) {
+        String accessToken = createToken(email, username, (60 * 30), accessSecretToken);
         return accessToken;
     }
 
@@ -101,8 +101,8 @@ public class TokenService {
      * @param email The email associated with the refresh token.
      * @return The created refresh token.
      */
-    public String createRefreshToken(String email) {
-        String refreshToken = createToken(email, (60 * 60 * 24 * 7), refreshSecretToken);
+    public String createRefreshToken(String email, String username) {
+        String refreshToken = createToken(email, username, (60 * 60 * 24 * 7), refreshSecretToken);
         return refreshToken;
     }
 

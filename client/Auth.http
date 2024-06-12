@@ -6,10 +6,20 @@ POST {{url}}/signup HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName" : "name{{random}}",
-    "lastName" : "lastName{{random}}",
-    "userName" : "userName{{random}}",
-    "email" : "user{{random}}@mail.com",
+    "firstName" : "name1",
+    "lastName" : "lastName1",
+    "userName" : "userName1",
+    "email" : "user1@mail.com",
     "password" : "P4ssword.",
     "birthday" : "2000-09-27"
+}
+
+### Signin user
+POST {{url}}/signin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "",
+    "userName" : "userName1",
+    "password" : "P4ssword."
 }
