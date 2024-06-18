@@ -45,7 +45,7 @@ public class TokenService {
      * @return The created token.
      */
     private String createToken(String email, String username, int seconds, SecretKey secretKey) {
-        return Jwts.builder().subject(email).subject(username).expiration(Date.from(new Date().toInstant().plusSeconds(seconds)))
+        return Jwts.builder().subject(email).expiration(Date.from(new Date().toInstant().plusSeconds(seconds)))
                 .signWith(secretKey).compact();
     }
 
@@ -91,7 +91,7 @@ public class TokenService {
      * @return The created access token.
      */
     public String createAccessToken(String email, String username) {
-        String accessToken = createToken(email, username, (60 * 30), accessSecretToken);
+        String accessToken = createToken(email, username, (60 * 60 * 24 * 7), accessSecretToken);
         return accessToken;
     }
 

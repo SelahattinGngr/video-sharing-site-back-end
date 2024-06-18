@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +32,6 @@ public class AuthController {
     @Autowired
     private LogConfig logConfig;
 
-    @SuppressWarnings("null")
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(HttpServletRequest request) {
         try {
@@ -41,7 +39,7 @@ public class AuthController {
             if (user == null)
                 throw new UserException();
             UsersEntity userEntity = authService.signup(user);
-            logConfig.log(request.getMethod(), getClass().getName(), "User created successfully.",userEntity);
+            logConfig.log(request.getMethod(), getClass().getName(), "User created successfully.", userEntity);
             return new ResponseEntity<>(Map.of("Success", "User created successfully."), HttpStatus.CREATED);
         } catch (UserException e) {
             return new BaseUserExceptions().exception("signing up.");
@@ -56,7 +54,8 @@ public class AuthController {
                 throw new UserException();
             UsersEntity userEntity = authService.signin(user);
             logConfig.log(request.getMethod(), getClass().getName(), "User signin in successfully.", userEntity);
-            return new ResponseEntity<>(Map.of("Success", "User signin in successfully."), HttpStatus.OK);
+            return new ResponseEntity<>(Map.of("Success", "User signin in successfully.", "RefreshToken",
+                    userEntity.getRefreshToken(), "AccessToken", userEntity.getAccessToken()), HttpStatus.OK);
         } catch (UserException e) {
             return new BaseUserExceptions().exception("signign in.");
         } catch (UserInvalidException e) {
@@ -65,9 +64,11 @@ public class AuthController {
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<Map<String, Object>> signout(@RequestHeader("Authorization") String authorization,
-            @RequestBody UsersEntity user) {
+    public ResponseEntity<Map<String, Object>> signout(@RequestHeader("Authorization") String authorization) {
+        String refreshToken = authorization.split(" ")[1];
         try {
+            authService.signout(refreshToken);
+            logConfig.log("POST", getClass().getName(), "User logged out successfully.", null);
             return new ResponseEntity<>(Map.of("Success", "User logged out successfully."), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new BaseUserExceptions().notFoundException();
@@ -75,6 +76,24 @@ public class AuthController {
             return new BaseTokenExceptions().invalidException();
         } catch (UserException e) {
             return new BaseUserExceptions().exception("logging out.");
+        } catch (UserInvalidException e) {
+            return new BaseUserExceptions().invalidException();
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Map<String, Object>> postMethodName(@RequestHeader("Authorization") String authorization) {
+        String refreshToken = authorization.split(" ")[1];
+        try {
+            Map<String, Object> response = authService.refreshToken(refreshToken);
+            logConfig.log("POST", getClass().getName(), "Token refreshed successfully.", null);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new BaseUserExceptions().notFoundException();
+        } catch (TokenInvalidException e) {
+            return new BaseTokenExceptions().invalidException();
+        } catch (UserException e) {
+            return new BaseUserExceptions().exception("refreshing token.");
         }
     }
 

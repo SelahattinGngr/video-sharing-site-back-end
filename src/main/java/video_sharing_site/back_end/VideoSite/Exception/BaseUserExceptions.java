@@ -35,7 +35,7 @@ public class BaseUserExceptions extends RuntimeException {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> notFoundException() {
-        return new ResponseEntity<>(Map.of("Error", "User not found."), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(Map.of("Error", "User not found."), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserEmailValidateException.class)
@@ -51,5 +51,10 @@ public class BaseUserExceptions extends RuntimeException {
     @ExceptionHandler(UserPasswordValidateException.class)
     public ResponseEntity<Map<String, Object>> passwordValidateException() {
         return new ResponseEntity<>(Map.of("Error", "Invalid Password."), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> forbiddenException() {
+        return new ResponseEntity<>(Map.of("error", "Forbidden action"), HttpStatus.FORBIDDEN);
     }
 }

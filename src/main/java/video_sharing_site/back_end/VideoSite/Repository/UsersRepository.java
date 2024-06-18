@@ -1,5 +1,6 @@
 package video_sharing_site.back_end.VideoSite.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,7 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Long> {
 
     // kullanıcı email ve şifresine göre kullanıcı bulma
     UsersEntity findByEmailAndPassword(String email, String password);
+
+    // bütün kullanıcıları dön
+    List<UsersEntity> findAll();
 }

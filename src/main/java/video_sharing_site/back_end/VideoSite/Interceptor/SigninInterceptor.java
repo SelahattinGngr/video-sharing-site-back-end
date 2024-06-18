@@ -1,5 +1,6 @@
 package video_sharing_site.back_end.VideoSite.Interceptor;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class SigninInterceptor implements HandlerInterceptor {
     @Autowired
     private LogConfig logConfig;
 
+    // TODO: girilen tek metni email mi username mi olduğunu kontrol et ona göre
+    // işlem yap
     @Override
     @SuppressWarnings("null")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -70,6 +73,17 @@ public class SigninInterceptor implements HandlerInterceptor {
             errorResponse = new BaseUserExceptions().passwordValidateException();
         }
         logConfig.log(request.getMethod(), getClass().getName(), errorResponse.getBody().get("Error").toString(), null);
+        handleException(errorResponse, response);
         return false;
+    }
+
+    // TODO: handleException metodunu service yap
+    private void handleException(ResponseEntity<Map<String, Object>> errorResponse, HttpServletResponse response)
+            throws IOException {
+        response.setStatus(errorResponse.getStatusCode().value());
+        response.setContentType("application/json");
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(errorResponse.getBody());
+        response.getWriter().write(json);
     }
 }

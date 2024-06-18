@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mysql:
     image: mysql:latest
-    restart: always
+    # restart: always
     environment:
       MYSQL_ROOT_PASSWORD: SelahattinPass1.
       MYSQL_DATABASE: video-site
@@ -31,7 +31,7 @@ services:
 
   redis:
     image: redis:latest
-    restart: always
+    # restart: always
     ports:
       - "6379:6379"
 

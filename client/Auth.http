@@ -6,20 +6,30 @@ POST {{url}}/signup HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName" : "name1",
-    "lastName" : "lastName1",
-    "userName" : "userName1",
-    "email" : "user1@mail.com",
+    "firstName" : "name4",
+    "lastName" : "lastName4",
+    "userName" : "userName4",
+    "email" : "user4@mail.com",
     "password" : "P4ssword.",
     "birthday" : "2000-09-27"
 }
 
 ### Signin user
+# @name signin
 POST {{url}}/signin HTTP/1.1
 Content-Type: application/json
 
 {
     "email" : "",
-    "userName" : "userName1",
+    "userName" : "userName3",
     "password" : "P4ssword."
 }
+
+### Signout user
+POST {{url}}/signout HTTP/1.1
+Authorization: RefreshToken {{signin.response.body.RefreshToken}}
+
+### Refresh token
+# @name refreshToken
+POST {{url}}/refresh-token HTTP/1.1
+Authorization: RefreshToken {{signin.response.body.RefreshToken}}

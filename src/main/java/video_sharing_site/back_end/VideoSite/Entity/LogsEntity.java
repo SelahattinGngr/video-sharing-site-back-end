@@ -29,7 +29,7 @@ public class LogsEntity {
     @Column(name = "time", nullable = false)
     private LocalDateTime time;
 
-    @Column(name = "message", nullable = false)
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
     private String message;
 
     @PrePersist
