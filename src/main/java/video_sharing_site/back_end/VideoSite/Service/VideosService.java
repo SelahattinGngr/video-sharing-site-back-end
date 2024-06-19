@@ -127,9 +127,6 @@ public class VideosService {
         if (exVideo.isEmpty()) {
             throw new VideoNotFoundException();
         }
-        if (video.getTitle() == null || video.getDescription() == null || video.getUrl() == null || video.getThumbnail() == null) {
-            throw new VideoErrorException();
-        }
         VideosEntity exVideoUrl = videosRepository.findByUrl(video.getUrl());
         if (exVideoUrl != null && exVideoUrl.getId() != id) {
             throw new VideoUrlException();
