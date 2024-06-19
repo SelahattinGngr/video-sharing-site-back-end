@@ -43,4 +43,11 @@ public class CategoriesEntity {
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public CategoriesEntity() {
+    }
+
+    public CategoriesEntity(Long id) {
+        this.id = id;
+    }
 }

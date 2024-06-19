@@ -1,6 +1,7 @@
 package video_sharing_site.back_end.VideoSite.Entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -29,7 +32,7 @@ public class VideosEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "url", nullable = false)
+    @Column(name = "url", nullable = false, unique = true)
     private String url;
 
     @Column(name = "thumbnail", nullable = false)
@@ -56,6 +59,10 @@ public class VideosEntity {
     @ManyToOne
     @JoinColumn(name = "uploaded_user_id", nullable = false)
     private UsersEntity uploadedUserId;
+
+    @ManyToMany
+    @JoinTable(name = "video_categories", joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "categorie_id"))
+    private List<CategoriesEntity> categories;
 
     @PrePersist
     public void onCreate() {
