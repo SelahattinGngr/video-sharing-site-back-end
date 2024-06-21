@@ -15,7 +15,7 @@ public interface PlaylistVideosRepository extends JpaRepository<PlaylistVideosEn
     PlaylistVideosEntity findByVideoIdId(VideosEntity videoId);
 
     // bunu niye yazdım unuttum :(
-    PlaylistVideosEntity findByPlaylistId(PlaylistsEntity playlistId);
+    List<PlaylistVideosEntity> findByPlaylistId(PlaylistsEntity playlistId);
 
     // bir videonun hangi playlistlerde olduğunu bulma
     List<PlaylistVideosEntity> findByVideoId(VideosEntity videoId);

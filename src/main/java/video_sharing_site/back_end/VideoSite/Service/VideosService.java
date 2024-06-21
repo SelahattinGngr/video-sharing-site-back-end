@@ -147,4 +147,29 @@ public class VideosService {
         categoriesRepository.saveAll(categories);
         return Map.of("message", "video updated successfully");
     }
+
+    public Map<String, Object> likeVideo(Long id, String authorization) {
+        String token = authorization.split(" ")[1];
+        String email = tokenService.getUserFromAccessToken(token);
+        UsersEntity user = usersRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserForbiddenException();
+        }
+        Optional<VideosEntity> video = videosRepository.findById(id);
+        if (video.isEmpty()) {
+            throw new VideoNotFoundException();
+        }
+        if (video.get().isStatus() == false) {
+            throw new VideoNotFoundException();
+        }
+        List<UsersEntity> likes = video.get().getLikes();
+        if (likes.contains(user)) {
+            throw new VideoErrorException();
+        }
+        likes.add(user);
+        video.get().setLikes(likes);
+        video.get().setLikeCount(video.get().getLikeCount() + 1);
+        videosRepository.save(video.get());
+        return Map.of("message", "video liked successfully");
+    }
 }

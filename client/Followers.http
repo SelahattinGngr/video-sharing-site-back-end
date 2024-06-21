@@ -7,18 +7,18 @@ Content-Type: application/json
 
 {
     "email" : "",
-    "userName" : "userName1",
+    "userName" : "userName2",
     "password" : "P4ssword."
 }
 
 ### Following user
 # @name following
-GET  {{url}}/username2 HTTP/1.1
+GET  {{url}}/username1 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### followers user
 # @name followers
-GET  {{url}}/followers/username1 HTTP/1.1
+GET  {{url}}/followers/username2 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### Unfollowing user

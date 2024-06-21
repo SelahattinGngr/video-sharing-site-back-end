@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ### Get all videos
 # @name get-videos
-GET {{url}}?page=1 HTTP/1.1
+GET {{url}}?page=1&size=5 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### Get video by id
@@ -23,24 +23,30 @@ Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### Upload video
 # @name upload-video
-POST {{url}}/upload-video HTTP/1.1
+POST {{url}} HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 Content-Type: application/json
 
 {
     "title" : "Video {{value}}",
     "description" : "",
-    "url" : "https://www.youtube.com/watch?v=08WrllY6Law",
-    "thumbnail" : "https://i.ytimg.com/vi/08WrllY6Law/hqdefault.jpg",
-    "categories" : [1, 2]
+    "url" : "https://www.youtube.com/watch?v=F5tSoaJ93ac",
+    "thumbnail" : "https://i.ytimg.com/vi/F5tSoaJ93ac/hqdefault.jpg",
+    "categories" : [3]
 }
 
 ### Update video
 # @name update-video
-PUT {{url}}/update-video/1 HTTP/1.1
+PUT {{url}}/1 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 Content-Type: application/json
 
 {
+    "url": "https://www.youtube.com/watch?v=08WrllY6Law",
     "categories" : [1]
 }
+
+### Like video
+# @name like-video
+GET {{url}}/like/2 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}

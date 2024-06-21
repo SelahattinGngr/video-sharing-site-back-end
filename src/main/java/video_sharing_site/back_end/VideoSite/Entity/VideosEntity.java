@@ -61,6 +61,10 @@ public class VideosEntity {
     private UsersEntity uploadedUserId;
 
     @ManyToMany
+    @JoinTable(name = "videos_likes", joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<UsersEntity> likes;
+
+    @ManyToMany
     @JoinTable(name = "video_categories", joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "categorie_id"))
     private List<CategoriesEntity> categories;
 

@@ -38,9 +38,10 @@ public class VideosController {
     @Autowired
     private LogConfig logConfig;
 
+    // TODO: @RequestParam(defaultValue = "") string search query ekle
     @GetMapping
     public ResponseEntity<Map<String, Object>> getVideos(@RequestHeader("Authorization") String Authorization,
-            @RequestParam(defaultValue = "1") int page) {
+            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         ResponseEntity<Map<String, Object>> responseEntity = null;
         Map<String, Object> response = null;
         String mesagge = null;
@@ -48,7 +49,7 @@ public class VideosController {
             if (page <= 0) {
                 throw new VideoErrorException();
             }
-            Pageable pageable = PageRequest.of(page - 1, 10);
+            Pageable pageable = PageRequest.of(page - 1, size);
             response = videosService.getVideos(pageable);
             mesagge = "getting videos by page : " + page;
             responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
@@ -84,7 +85,31 @@ public class VideosController {
         return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
     }
 
-    @PostMapping("/upload-video")
+    @GetMapping("/like/{id}")
+    public ResponseEntity<Map<String, Object>> likeVideo(@RequestHeader("Authorization") String Authorization,
+            @PathVariable Long id) {
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+        Map<String, Object> response = null;
+        String mesagge = null;
+        try {
+            response = videosService.likeVideo(id, Authorization);
+            responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+            mesagge = "liking video by id : " + id;
+        } catch (VideoErrorException e) {
+            responseEntity = new BaseVideoExceptions().errorException("liking video by id : " + id.toString());
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (VideoNotFoundException e) {
+            responseEntity = new BaseVideoExceptions().notFoundException(id);
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (UserForbiddenException e) {
+            responseEntity = new BaseUserExceptions().forbiddenException();
+            mesagge = responseEntity.getBody().get("error").toString();
+        }
+        logConfig.token(Authorization, "GET", getClass().getName(), mesagge);
+        return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
+    }
+
+    @PostMapping
     public ResponseEntity<Map<String, Object>> uploadVideo(@RequestHeader("Authorization") String Authorization,
             @RequestBody VideosEntity video) {
         ResponseEntity<Map<String, Object>> responseEntity = null;
@@ -108,7 +133,7 @@ public class VideosController {
         return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
     }
 
-    @PutMapping("/update-video/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateVideo(@RequestHeader("Authorization") String Authorization,
             @PathVariable Long id, @RequestBody VideosEntity video) {
         ResponseEntity<Map<String, Object>> responseEntity = null;
