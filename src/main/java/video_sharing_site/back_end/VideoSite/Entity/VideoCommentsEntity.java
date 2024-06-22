@@ -1,6 +1,7 @@
 package video_sharing_site.back_end.VideoSite.Entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -42,9 +45,14 @@ public class VideoCommentsEntity {
 
     @Column(name = "is_spoiler", nullable = false)
     private boolean isSpoiler;
+    
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private VideoCommentsEntity parentId;
 
-    @Column(name = "parent_id", nullable = true)
-    private Long parentId;
+    @ManyToMany
+    @JoinTable(name = "video_comments_likes", joinColumns = @JoinColumn(name = "comment_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<UsersEntity> likes;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

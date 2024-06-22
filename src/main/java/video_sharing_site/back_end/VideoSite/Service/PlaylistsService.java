@@ -14,10 +14,14 @@ import org.springframework.stereotype.Service;
 import video_sharing_site.back_end.VideoSite.Entity.PlaylistVideosEntity;
 import video_sharing_site.back_end.VideoSite.Entity.PlaylistsEntity;
 import video_sharing_site.back_end.VideoSite.Entity.UsersEntity;
+import video_sharing_site.back_end.VideoSite.Entity.VideosEntity;
+import video_sharing_site.back_end.VideoSite.Exception.PlaylistExceptions.PlaylistNotFoundException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserForbiddenException;
+import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserNotFoundException;
 import video_sharing_site.back_end.VideoSite.Repository.PlaylistVideosRepository;
 import video_sharing_site.back_end.VideoSite.Repository.PlaylistsRepository;
 import video_sharing_site.back_end.VideoSite.Repository.UsersRepository;
+import video_sharing_site.back_end.VideoSite.Repository.VideosRepository;
 import video_sharing_site.back_end.VideoSite.Shared.Services.jwt.TokenService;
 
 @Service
@@ -34,6 +38,9 @@ public class PlaylistsService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private VideosRepository videosRepository;
 
     public Map<String, Object> getPublicPlaylists(Pageable page) {
         List<PlaylistsEntity> playlists = playlistsRepository.findByStatus(true, page);
@@ -202,23 +209,58 @@ public class PlaylistsService {
         String email = tokenService.getUserFromAccessToken(token);
         UsersEntity user = usersRepository.findByEmail(email);
         if (user == null) {
-            throw new UserForbiddenException();
+            throw new UserNotFoundException();
         }
         PlaylistsEntity playlist = playlistsRepository.findById(id).get();
         if (playlist == null) {
-            throw new UserForbiddenException();
-        }
-        if (playlist.getFollowers().contains(user)) {
-            throw new UserForbiddenException();
+            throw new PlaylistNotFoundException();
         }
         if (!playlist.isStatus()) {
             throw new UserForbiddenException();
+        }
+        if (playlist.getFollowers().contains(user)) {
+            List<UsersEntity> followers = playlist.getFollowers();
+            followers.remove(user);
+            playlist.setFollowers(followers);
+            playlistsRepository.save(playlist);
+            return Map.of("message", "Playlist unfollowed successfully");
         }
         List<UsersEntity> followers = playlist.getFollowers();
         followers.add(user);
         playlist.setFollowers(followers);
         playlistsRepository.save(playlist);
         return Map.of("message", "Playlist followed successfully");
+    }
+
+    public Map<String, Object> addVideoToPlaylist(String authorization, Long id, Map<String, Object> video) {
+        String token = authorization.split(" ")[1];
+        String email = tokenService.getUserFromAccessToken(token);
+        UsersEntity user = usersRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        PlaylistsEntity playlist = playlistsRepository.findById(id).get();
+        if (playlist == null) {
+            throw new PlaylistNotFoundException();
+        }
+        if (!playlist.getUserId().getId().equals(user.getId())) {
+            throw new UserForbiddenException();
+        }
+        System.out.println("sakso");
+        String videoId = video.get("videoId").toString();
+        Long videoIdLong = Long.parseLong(videoId);
+        System.out.println(videoIdLong);
+        VideosEntity videoEntity = videosRepository.findById(videoIdLong).get();
+        PlaylistVideosEntity tmp = playlistVideosRepository.findByPlaylistIdAndVideoId(playlist, videoEntity);
+        if (tmp != null) {
+            playlistVideosRepository.delete(tmp);
+            return Map.of("message", "Video removed from playlist successfully");
+        }
+        PlaylistVideosEntity playlistVideo = new PlaylistVideosEntity();
+        playlistVideo.setPlaylistId(playlist);
+        playlistVideo.setVideoId(videoEntity);
+        playlistVideosRepository.save(playlistVideo);
+        return Map.of("message", "Video added to playlist successfully");
     }
 
 }

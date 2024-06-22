@@ -18,6 +18,8 @@ import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserForbid
 import video_sharing_site.back_end.VideoSite.Service.CategoriesService;
 import video_sharing_site.back_end.VideoSite.Shared.Config.LogConfig;
 
+// TODO: guncelleme islemi eklenecek
+
 @RestController
 @RequestMapping("/${video-site.server.api.key}/categories")
 public class CategoriesController {

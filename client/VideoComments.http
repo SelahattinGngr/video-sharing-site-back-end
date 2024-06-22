@@ -1,0 +1,53 @@
+@url = http://localhost:5353/1qz2x3c4v5b6n7m8l9k0j/video-comments
+@value = 1
+### Signin user
+# @name signin
+POST http://localhost:5353/1qz2x3c4v5b6n7m8l9k0j/auth/signin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "",
+    "userName" : "userName2",
+    "password" : "P4ssword."
+}
+
+### Get video comments
+# @name get-video-comments
+GET {{url}}/1?page=1&size=5 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}
+
+### Get video comment liked users
+# @name get-video-comment-liked-users
+GET {{url}}/likes/2?page=1&size=5 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}
+
+### Video like comment
+# @name like-video-comment
+GET {{url}}/like/2 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}
+
+### add video comment
+# @name add-video-comment
+POST {{url}}/1 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}
+Content-Type: application/json
+
+{
+    "content" : "Comment parrent {{value}}",
+    "parentId" : 2
+}
+
+### put video comment
+# @name put-video-comment
+PUT {{url}}/1 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}
+Content-Type: application/json
+
+{
+    "content" : "Comment parrent asdasd {{value}}"
+}
+
+### delete video comment
+# @name delete-video-comment
+DELETE {{url}}/1 HTTP/1.1
+Authorization: Bearer {{signin.response.body.AccessToken}}

@@ -97,6 +97,8 @@ public class AuthController {
         }
     }
 
+    // TODO: sifremi unuttum ve sifre degistirme islemleri eklenecek
+
     // @PostMapping("/forgot-password")
     // public ResponseEntity<Map<String, Object>> forgotPassword() {
     // try {

@@ -1,4 +1,4 @@
-@url = http://localhost:5354/1qz2x3c4v5b6n7m8l9k0j/auth
+@url = http://localhost:5353/1qz2x3c4v5b6n7m8l9k0j/auth
 @random = {{$randomInt 1 9999999}}
 
 ### Signup user
@@ -8,8 +8,8 @@ Content-Type: application/json
 {
     "firstName" : "name4",
     "lastName" : "lastName4",
-    "userName" : "userName4",
-    "email" : "user4@mail.com",
+    "userName" : "userNamse4",
+    "email" : "userasd4@mail.com",
     "password" : "P4ssword.",
     "birthday" : "2000-09-27"
 }

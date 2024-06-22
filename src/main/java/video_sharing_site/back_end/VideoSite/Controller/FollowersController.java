@@ -16,6 +16,8 @@ import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserForbid
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserNotFoundException;
 import video_sharing_site.back_end.VideoSite.Service.FollowersService;
 
+// TODO: takip edilen kullanıcıları da getir
+
 @RestController
 @RequestMapping("/${video-site.server.api.key}/followers")
 public class FollowersController {
@@ -37,7 +39,7 @@ public class FollowersController {
         }
     }
 
-    @GetMapping("/{userName}")
+    @GetMapping("/follow/{userName}")
     public ResponseEntity<Map<String, Object>> followUser(@RequestHeader("Authorization") String Authorization,
             @PathVariable("userName") String userName) {
         String token = Authorization.split(" ")[1];

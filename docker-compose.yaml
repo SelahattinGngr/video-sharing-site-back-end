@@ -5,14 +5,14 @@ services:
     image: mysql:latest
     # restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: SelahattinPass1.
-      MYSQL_DATABASE: video-site
-      MYSQL_USER: selahattin
-      MYSQL_PASSWORD: Selahattin123.
-      MYSQL_USER_2: moderator1
-      MYSQL_PASSWORD_2: moderator1Pass
+      MYSQL_ROOT_PASSWORD: SelahattinPass1. # Bunu kendi şifrenizle değiştirin
+      MYSQL_DATABASE: video-site            # Bunu kendi veritabanı adınızla değiştirin
+      MYSQL_USER: selahattin                # Bunu kendi kullanıcı adınızla değiştirin
+      MYSQL_PASSWORD: Selahattin123.        # Bunu kendi şifrenizle değiştirin
+      MYSQL_USER_2: moderator1              # Bunu kendi kullanıcı adınızla değiştirin
+      MYSQL_PASSWORD_2: moderator1Pass      # Bunu kendi şifrenizle değiştirin
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -25,7 +25,7 @@ services:
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: SelahattinPass1.
     ports:
-      - "8082:80"
+      - "8080:80"
     depends_on:
       - mysql
 

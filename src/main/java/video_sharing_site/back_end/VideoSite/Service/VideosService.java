@@ -73,6 +73,8 @@ public class VideosService {
         uploadedUser.put("uploaded_username", video.get().getUploadedUserId().getUserName());
         uploadedUser.put("uploaded_followers_count", video.get().getUploadedUserId().getFollowersCount());
 
+        video.get().setViews(video.get().getViews() + 1);
+        videosRepository.save(video.get());
         Map<String, Object> videoData = new HashMap<>();
         videoData.put("id", video.get().getId());
         videoData.put("title", video.get().getTitle());
@@ -164,7 +166,11 @@ public class VideosService {
         }
         List<UsersEntity> likes = video.get().getLikes();
         if (likes.contains(user)) {
-            throw new VideoErrorException();
+            likes.remove(user);
+            video.get().setLikes(likes);
+            video.get().setLikeCount(video.get().getLikeCount() - 1);
+            videosRepository.save(video.get());
+            return Map.of("message", "video unliked successfully");
         }
         likes.add(user);
         video.get().setLikes(likes);

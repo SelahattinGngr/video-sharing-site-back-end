@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import video_sharing_site.back_end.VideoSite.Exception.BaseUserExceptions;
 import video_sharing_site.back_end.VideoSite.Exception.BaseVideoExceptions;
+import video_sharing_site.back_end.VideoSite.Exception.PlaylistExceptions.PlaylistNotFoundException;
 import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserForbiddenException;
+import video_sharing_site.back_end.VideoSite.Exception.UserExceptions.UserNotFoundException;
 import video_sharing_site.back_end.VideoSite.Exception.VideoExceptions.VideoErrorException;
 import video_sharing_site.back_end.VideoSite.Service.PlaylistsService;
 import video_sharing_site.back_end.VideoSite.Shared.Config.LogConfig;
 
-
+// TODO: playlist'i takip eden kullanıcıları döndürecek bir endpoint eklenebilir
 
 @RestController
 @RequestMapping("/${video-site.server.api.key}/playlists")
@@ -85,7 +87,8 @@ public class PlaylistsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getPlaylist(@RequestHeader("Authorization") String Authorization,
-            @PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+            @PathVariable Long id, @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         ResponseEntity<Map<String, Object>> responseEntity = null;
         Map<String, Object> response = null;
         String mesagge = null;
@@ -110,6 +113,15 @@ public class PlaylistsController {
         try {
             response = playlistsService.followPlaylist(Authorization, id);
             responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            responseEntity = new BaseUserExceptions().notFoundException();
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (PlaylistNotFoundException e) {
+            responseEntity = new BaseVideoExceptions().playlistNotFoundException();
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (UserForbiddenException e) {
+            responseEntity = new BaseUserExceptions().forbiddenException();
+            mesagge = responseEntity.getBody().get("error").toString();
         } catch (Exception e) {
             responseEntity = new BaseVideoExceptions().errorException("following playlist");
             mesagge = responseEntity.getBody().get("error").toString();
@@ -132,7 +144,33 @@ public class PlaylistsController {
         logConfig.token(Authorization, "POST", getClass().getName(), mesagge);
         return responseEntity;
     }
-    
+
+    @PostMapping("/add-video/{id}")
+    public ResponseEntity<Map<String, Object>> addVideoToPlaylist(@RequestHeader("Authorization") String Authorization,
+            @PathVariable Long id, @RequestBody Map<String, Object> video) {
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+        Map<String, Object> response = null;
+        String mesagge = null;
+        try {
+            response = playlistsService.addVideoToPlaylist(Authorization, id, video);
+            responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            responseEntity = new BaseUserExceptions().notFoundException();
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (PlaylistNotFoundException e) {
+            responseEntity = new BaseVideoExceptions().playlistNotFoundException();
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (UserForbiddenException e) {
+            responseEntity = new BaseUserExceptions().forbiddenException();
+            mesagge = responseEntity.getBody().get("error").toString();
+        } catch (Exception e) {
+            responseEntity = new BaseVideoExceptions().errorException("adding video to playlist");
+            mesagge = responseEntity.getBody().get("error").toString();
+        }
+        logConfig.token(Authorization, "POST", getClass().getName(), mesagge);
+        return responseEntity;
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePlaylist(@RequestHeader("Authorization") String Authorization,
             @PathVariable Long id, @RequestBody Map<String, Object> playlist) {
@@ -145,7 +183,7 @@ public class PlaylistsController {
         } catch (UserForbiddenException e) {
             responseEntity = new BaseUserExceptions().forbiddenException();
             mesagge = responseEntity.getBody().get("error").toString();
-        
+
         } catch (Exception e) {
             mesagge = e.getMessage();
             responseEntity = new BaseVideoExceptions().errorException("updating playlist");

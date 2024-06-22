@@ -1,9 +1,9 @@
-@url = http://localhost:5354/1qz2x3c4v5b6n7m8l9k0j/categories
+@url = http://localhost:5353/1qz2x3c4v5b6n7m8l9k0j/categories
 @value = 6
 
 ### Signin user
 # @name signin
-POST http://localhost:5354/1qz2x3c4v5b6n7m8l9k0j/auth/signin HTTP/1.1
+POST http://localhost:5353/1qz2x3c4v5b6n7m8l9k0j/auth/signin HTTP/1.1
 Content-Type: application/json
 
 {
