@@ -4,7 +4,7 @@
 
 ### 1. Proje nasıl çalıştırılır?
 
-[Kurulum](/Readme.md#kurulum) adımlarını takip ederek projeyi çalıştırabilirsiniz.
+[Kurulum](/README.md#kurulum) adımlarını takip ederek projeyi çalıştırabilirsiniz.
 
 ### 2. Hangi teknolojiler kullanıldı?
 
