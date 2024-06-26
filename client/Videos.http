@@ -28,11 +28,11 @@ Authorization: Bearer {{signin.response.body.AccessToken}}
 Content-Type: application/json
 
 {
-    "title" : "Video {{value}}",
-    "description" : "",
+    "title" : "Video title",
+    "description" : "description of the video",
     "url" : "https://www.youtube.com/watch?v=fKopy74weus",
     "thumbnail" : "https://i.ytimg.com/vi/fKopy74weus/hqdefault.jpg",
-    "categories" : []
+    "categories" : [1, 2, 3]
 }
 
 ### Update video

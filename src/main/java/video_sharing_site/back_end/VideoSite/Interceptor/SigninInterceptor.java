@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -46,7 +47,6 @@ public class SigninInterceptor implements HandlerInterceptor {
             String email = jsonNode.get("email").asText();
             String username = jsonNode.get("userName").asText();
             String password = jsonNode.get("password").asText();
-
             if ((email.isEmpty() && username.isEmpty()) || password.isEmpty()) {
                 throw new UserInvalidException();
             }

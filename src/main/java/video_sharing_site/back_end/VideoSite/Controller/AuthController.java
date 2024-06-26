@@ -60,6 +60,10 @@ public class AuthController {
             return new BaseUserExceptions().exception("signign in.");
         } catch (UserInvalidException e) {
             return new BaseUserExceptions().invalidException();
+        } catch (UserNotFoundException e) {
+            return new BaseUserExceptions().notFoundException();
+        } catch (Exception e) {
+            return new BaseUserExceptions().exception("signing in.");
         }
     }
 

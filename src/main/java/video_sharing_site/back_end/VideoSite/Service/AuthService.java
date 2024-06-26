@@ -52,6 +52,7 @@ public class AuthService {
             throw new UserInvalidException();
         if (userEntity.getRefreshToken() != null)
             redisTemplate.delete(userEntity.getRefreshToken());
+        System.out.println("userEntity.getRefreshToken()");
         UserDTO redisDto = entityToDto(userEntity);
         redisTemplate.opsForValue().set(redisDto.getRefreshToken(), redisDto);
         redisTemplate.expire(redisDto.getRefreshToken(), (60 * 60 * 24 * 7), TimeUnit.SECONDS);
