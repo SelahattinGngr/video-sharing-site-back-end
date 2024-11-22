@@ -52,7 +52,6 @@ public class AuthService {
             throw new UserInvalidException();
         if (userEntity.getRefreshToken() != null)
             redisTemplate.delete(userEntity.getRefreshToken());
-        System.out.println("userEntity.getRefreshToken()");
         UserDTO redisDto = entityToDto(userEntity);
         redisTemplate.opsForValue().set(redisDto.getRefreshToken(), redisDto);
         redisTemplate.expire(redisDto.getRefreshToken(), (60 * 60 * 24 * 7), TimeUnit.SECONDS);
@@ -92,7 +91,7 @@ public class AuthService {
         UsersEntity userEntity = usersRepository.findByEmail(email);
         if (userEntity == null)
             throw new UserNotFoundException();
-        if (userEntity.getRefreshToken() != null ) /* && !userEntity.getRefreshToken().equals(refreshToken))*/
+        if (userEntity.getRefreshToken() != null) /* && !userEntity.getRefreshToken().equals(refreshToken)) */
             redisTemplate.delete(userEntity.getRefreshToken()); // throw new TokenInvalidException();
         String newRefreshToken = tokenService.createRefreshToken(email, userEntity.getUserName());
         String newAccessToken = tokenService.createAccessToken(email, userEntity.getUserName());

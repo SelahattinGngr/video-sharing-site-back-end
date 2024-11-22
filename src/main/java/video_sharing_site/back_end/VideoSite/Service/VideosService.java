@@ -73,7 +73,9 @@ public class VideosService {
         uploadedUser.put("uploaded_username", video.get().getUploadedUserId().getUserName());
         uploadedUser.put("uploaded_followers_count", video.get().getUploadedUserId().getFollowersCount());
 
+        System.out.println(video.get().getViews());
         video.get().setViews(video.get().getViews() + 1);
+        System.out.println(video.get().getViews());
         videosRepository.save(video.get());
         Map<String, Object> videoData = new HashMap<>();
         videoData.put("id", video.get().getId());

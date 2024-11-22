@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,6 +24,7 @@ import video_sharing_site.back_end.VideoSite.Shared.Config.LogConfig;
 import video_sharing_site.back_end.VideoSite.Shared.Services.Validations.SigninValidationService;
 
 @Component
+@SuppressWarnings("null")
 public class SigninInterceptor implements HandlerInterceptor {
 
     @Autowired
@@ -33,23 +33,23 @@ public class SigninInterceptor implements HandlerInterceptor {
     @Autowired
     private LogConfig logConfig;
 
-    // TODO: girilen tek metni email mi username mi olduğunu kontrol et ona göre
-    // işlem yap
     @Override
-    @SuppressWarnings("null")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(request.getInputStream());
         ResponseEntity<Map<String, Object>> errorResponse;
+
         try {
             UserDTO user = new UserDTO();
-            String email = jsonNode.get("email").asText();
-            String username = jsonNode.get("userName").asText();
-            String password = jsonNode.get("password").asText();
+            String email = jsonNode.has("email") ? jsonNode.get("email").asText() : "";
+            String username = jsonNode.has("userName") ? jsonNode.get("userName").asText() : "";
+            String password = jsonNode.has("password") ? jsonNode.get("password").asText() : "";
+
             if ((email.isEmpty() && username.isEmpty()) || password.isEmpty()) {
                 throw new UserInvalidException();
             }
+
             if (!email.isEmpty()) {
                 validationService.validateEmail(email);
                 user.setEmail(email);
@@ -57,9 +57,11 @@ public class SigninInterceptor implements HandlerInterceptor {
                 validationService.validateUsername(username);
                 user.setUserName(username);
             }
+
             validationService.validatePassword(password);
             user.setPassword(password);
             request.setAttribute("userDto", user);
+
             return true;
         } catch (UserInvalidException e) {
             errorResponse = new BaseUserExceptions().invalidException();
@@ -72,12 +74,12 @@ public class SigninInterceptor implements HandlerInterceptor {
         } catch (UserPasswordValidateException e) {
             errorResponse = new BaseUserExceptions().passwordValidateException();
         }
+
         logConfig.log(request.getMethod(), getClass().getName(), errorResponse.getBody().get("Error").toString(), null);
         handleException(errorResponse, response);
         return false;
     }
 
-    // TODO: handleException metodunu service yap
     private void handleException(ResponseEntity<Map<String, Object>> errorResponse, HttpServletResponse response)
             throws IOException {
         response.setStatus(errorResponse.getStatusCode().value());

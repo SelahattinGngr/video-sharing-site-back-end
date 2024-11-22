@@ -7,13 +7,13 @@ Content-Type: application/json
 
 {
     "email" : "",
-    "userName" : "userName2",
+    "userName" : "userName1",
     "password" : "P4ssword."
 }
 
 ### Get all videos
 # @name get-videos
-GET {{url}}?page=1&size=5 HTTP/1.1
+GET {{url}}?page=1HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### Get video by id
@@ -28,10 +28,10 @@ Authorization: Bearer {{signin.response.body.AccessToken}}
 Content-Type: application/json
 
 {
-    "title" : "Video title",
-    "description" : "description of the video",
-    "url" : "https://www.youtube.com/watch?v=fKopy74weus",
-    "thumbnail" : "https://i.ytimg.com/vi/fKopy74weus/hqdefault.jpg",
+    "title" : "Tuğkan Geber (Akustik)",
+    "description" : "Tuğkan - Geber (Akustik) şarkısını dinlemek için",
+    "url" : "https://www.youtube.com/embed/vc3VLvsh77U?si=kt-qweqweZt1lzd7EIaP0Oqewqwe",
+    "thumbnail" : "https://i.ytimg.com/vi/vc3VLvsh77U/hqdefault.jpg",
     "categories" : [1, 2, 3]
 }
 

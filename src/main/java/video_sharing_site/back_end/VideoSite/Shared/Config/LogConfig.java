@@ -12,7 +12,7 @@ import video_sharing_site.back_end.VideoSite.Shared.Services.jwt.TokenService;
 
 @Component
 public class LogConfig {
-    
+
     @Autowired
     private LogsRepository logsRepository;
 
@@ -26,9 +26,14 @@ public class LogConfig {
     private UsersRepository usersRepository;
 
     public void token(String Authorization, String action, String module, String message) {
-        String token = Authorization.split(" ")[1];
-        String email = tokenService.getUserFromAccessToken(token);
-        UsersEntity user = usersRepository.findByEmail(email);
+        String token;
+        String email;
+        UsersEntity user = null;
+        if (Authorization != null) {
+            token = Authorization.split(" ")[1];
+            email = tokenService.getUserFromAccessToken(token);
+            user = usersRepository.findByEmail(email);
+        }
         log(action, module, message, user);
     }
 
@@ -37,7 +42,8 @@ public class LogConfig {
         module = module.substring(28);
         LogsEntity logsEntity = new LogsEntity();
         logsEntity.setUserId(user);
-        logsEntity.setMessage("[" + ipService.getClientIpAddress() + "] | " + action.toUpperCase() + " | " + module + " | " + message);
+        logsEntity.setMessage("[" + ipService.getClientIpAddress() + "] | " + action.toUpperCase() + " | " + module
+                + " | " + message);
         logsRepository.save(logsEntity);
     }
 

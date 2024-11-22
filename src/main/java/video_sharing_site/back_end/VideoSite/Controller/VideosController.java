@@ -39,9 +39,12 @@ public class VideosController {
     private LogConfig logConfig;
 
     // TODO: @RequestParam(defaultValue = "") string search query ekle
+
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getVideos(@RequestHeader("Authorization") String Authorization,
-            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Map<String, Object>> getVideos(
+            @RequestHeader(value = "Authorization", required = false) String Authorization,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         ResponseEntity<Map<String, Object>> responseEntity = null;
         Map<String, Object> response = null;
         String mesagge = null;
@@ -60,9 +63,10 @@ public class VideosController {
         logConfig.token(Authorization, "GET", getClass().getName(), mesagge);
         return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
     }
-
+    
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getVideo(@RequestHeader("Authorization") String Authorization,
+    public ResponseEntity<Map<String, Object>> getVideo(
+            @RequestHeader(value = "Authorization", required = false) String Authorization,
             @PathVariable Long id) {
         ResponseEntity<Map<String, Object>> responseEntity = null;
         Map<String, Object> response = null;

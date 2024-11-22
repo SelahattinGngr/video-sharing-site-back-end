@@ -36,6 +36,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(refreshTokenInterceptor).addPathPatterns(apiKey + "/auth/signout", apiKey + "/auth/refresh-token");
 
         registry.addInterceptor(accessTokenInterceptor).addPathPatterns(apiKey + "/**")
-            .excludePathPatterns(apiKey + "/auth/**");
+            .excludePathPatterns(apiKey + "/auth/**", apiKey + "/videos/**");
     }
 }

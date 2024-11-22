@@ -100,7 +100,7 @@ public class VideoCommentsController {
         String mesagge = null;
         try {
             response = videoCommentsService.likeVideoComment(token, id);
-            mesagge = "liking video comment by video comment id : " + id;
+            mesagge = response.get("message").toString() + " - video comment id : " + id;
             responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             responseEntity = new BaseVideoExceptions().errorException("liking video comment");

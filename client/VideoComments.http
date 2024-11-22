@@ -13,12 +13,12 @@ Content-Type: application/json
 
 ### Get video comments
 # @name get-video-comments
-GET {{url}}/1?page=1&size=5 HTTP/1.1
+GET {{url}}/1 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### Get video comment liked users
 # @name get-video-comment-liked-users
-GET {{url}}/likes/2?page=1&size=5 HTTP/1.1
+GET {{url}}/likes/2 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### Video like comment
@@ -28,13 +28,13 @@ Authorization: Bearer {{signin.response.body.AccessToken}}
 
 ### add video comment
 # @name add-video-comment
-POST {{url}}/1 HTTP/1.1
+POST {{url}}/10 HTTP/1.1
 Authorization: Bearer {{signin.response.body.AccessToken}}
 Content-Type: application/json
 
 {
-    "content" : "Comment parrent {{value}}",
-    "parentId" : 2
+    "content" : "şipidik şey çeni",
+    "parentId" : 0
 }
 
 ### put video comment
